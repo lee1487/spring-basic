@@ -94,11 +94,11 @@ DIP 의존관계 역전 원칙
 
 #비즈니스 요구사항과 설계
 ```
-  - 회원
+  회원
     - 회원을 가입하고 조회할 수 있다.
 	- 회원은 일반과 VIP 두 가지 등급이 있다.
 	- 회원 데이터는 자체 DB를 구축 할 수 있고, 외부 시스템과 연동할 수 있다.(미확정)
-  - 주문과 할인 정책
+  주문과 할인 정책
     - 회원은 상품을 주문할 수 있다.
 	- 회원 등급에 따라 할인 정책을 적용할 수 있다.
 	- 할인 정책은 모든 VIP는 1000원을 할인해주는 고정 금액 할인을 적용해달라.(나중에 변경 될 수 있다.)
@@ -134,18 +134,18 @@ DIP 의존관계 역전 원칙
   - OCP: 변경하지 않고 확장 할 수 있다고 했는데
     - 지금 코드는 기능을 확장해서 변경하면, 클라이언트 코드에 영향을 준다. 따라서 OCP를 위반한다.
 	
-  - 어떻게 문제를 해결 할 수 있을까?
+  어떻게 문제를 해결 할 수 있을까?
     - 클라이언트 코드인 OrderServiceImpl은 DiscountPolicy의 인터페이스 뿐만 아니라 구체 클래스도 함께 의존한다.
 	- 그래서 구체 클래스를 변경할 때 클라이언트 코드도 함께 변경해야 한다.
 	- DIP 위반 -> 추상에만 의존하도록 변경(인터페이스에만 의존)
 	- DIP를 위반하지 않도록 인터페이스에만 의존하도록 의존관계를 변경하면 된다.
 	
-  - 인터페이스에만 의존하도록 설계를 변경하자!!
+  인터페이스에만 의존하도록 설계를 변경하자!!
     - 인터페이스에만 의존하도록 설계와 코드를 변경했다.
 	- 그런데 구현체가 없는데 어떻게 코드를 실행할 수 있을가?
 	- 실제 실행을 해보면 NPE(Null Pointer Exception)가 발생한다.
 	
-  - 해결방안 
+  해결방안 
     - 이 문제를 해결하려면 누군가가 클라이언트인 OrderServiceImpl 에 DiscountPolicy의 구현 객체를 대신 생성하고 주입해주어야 한다.
 ```
 
@@ -158,25 +158,25 @@ DIP 의존관계 역전 원칙
 	줄리엣 역할(인터페이스)을 하는 여자 주인공(구현체,배우)을 직접 초빙하는 것과 같다.
 	디카프리오는 공연도 해야하고 동시에 여자 주인공도 공연에 직접 초빙해야 하는 "다양한 책임" 을 가지고 있다.
 	
-  - 관심사를 분리하자
+  관심사를 분리하자
     - 배우는 본인의 역할인 배역을 수행하는 것에만 집중해야 한다.
 	- 디카프리오는 어떤 여자 주인공이 선택되더라도 똑같이 공연을 할 수 있어야 한다.
 	- 공연을 구성하고, 담당 배우를 섭외하고, 역할에 맞는 배우를 지정하는 책임을 담당하는 별도의 "공연 기획자"가 나올 시점이다.
 	- 공연 기획자를 만들고, 배우와 공연 기획자의 책임을 확실히 분리하자.
 	
-  - AppConfig 등장
+  AppConfig 등장
     - 애플리케이션의 전체 동작 방식을 구성(config)하기 위해, "구현 객체를 생성" 하고 "연결" 하는 책임을 가지는 별도의 설정 클래스를 만들자. 
   
-  - AppConfig는 애플리케이션의 실제 동작에 필요한 "구현 객체를 생성"한다.
+  AppConfig는 애플리케이션의 실제 동작에 필요한 "구현 객체를 생성"한다.
     - MemberServiceImpl
 	- MemoryMemberRepository
 	- OrderServiceImpl
 	- FixDiscountPolicy
-  - AppConfig는 생성한 객체 인스턴스의 차조(레퍼런스)fmf "생성자를 통해서 주입(연결)"해준다.
+  AppConfig는 생성한 객체 인스턴스의 차조(레퍼런스)fmf "생성자를 통해서 주입(연결)"해준다.
     - MemberServiceImpl -> MemoryMemberRepository
 	- OrderServiceImpl -> MemoryMemberRepository, FixDiscountPolicy
   
-  - MemberServiceImpl- 생성자 주입
+  MemberServiceImpl- 생성자 주입
     - 설계 변경으로 MemberServiceImpl은 MemoryMemberRepository를 의존하지 않는다.
     - 단지 MemberRepository 인터페이스만 의존한다.
     - MemberServiceImpl입장에서 생성자를 통해 어떤 구현 객체가 들어올지(주입될지)는 알 수 없다.
@@ -191,20 +191,29 @@ DIP 의존관계 역전 원칙
     - 클라이언트인 memberServiceImpl입장에서 보면 의존관계를 마치 외부에서 주입해주는 것 같다고 해서 DI(Dependency Injection)
     우리말로 의존관계 주입 또는 의존성 주입이라 한다.
 	
-  - OrderServiceImpl- 생성자 주입
+  OrderServiceImpl- 생성자 주입
     - 설계 변경으로 OrderServiceImpl은 FixDiscountPolicy를 의존하지 않는다.
     - 단지 DiscountPolicy 인터페이스만 의존한다.
     - OrderServiceImpl입장에서 생성자를 통해 어떤 구현 객체가 들어올지(주입될지)는 알 수 없다.
     - OrderServiceImpl의 생성자를 통해서 어떤 구현 객체를 주입할지는 오직 외부(AppConfig)에서 결정된다.
     - OrderServiceImpl은 이제부터 "실행에만 집중"하면 된다.
 	
-  - 테스트 코드에서 @BeforeEach는 각 테스트를 실행하기 전에 호출된다
+  테스트 코드에서 @BeforeEach는 각 테스트를 실행하기 전에 호출된다
   
-  - 정리
+  정리
     - AppConfig를 통해서 관심사를 확실하게 분리했다.
 	- 배역, 배우를 생각해보자
 	- AppConfig는 공연 기획자다.
 	- AppConfig는 구체 클래스를 선택한다. 배역에 맞는 담당 배우를 선택한다. 애플리케이션이 어떻게 동작해야 할지 전체 구성을 책임진다.
 	- 이제 각 배우들은 담당 기능을 실행하는 책임만 지면 된다.
 	- OrderServiceImpl은 기능을 실행하는 책임만 지면 된다.
+```
+
+#AppConfig 리펙토링
+```
+  - 현재 AppConfig를 보면 "중복"이 있고 "역할"에 따른 "구현"이 잘 안보인다.
+  
+  리펙토링 후
+    - new MemoryMemberRepository() 이 부분이 중복 제거되었다. 이제 MemoryMemberRepository를 다른 구현체로 변경할 때 한 부분만 변경하면 된다.
+	- AppConfig를 보면 역할과 구현 클래스가 한눈에 들어온다. 애플리케이션 전체 구성이 어떻게 되어있는지 빠르게 파악할 수 있다.
 ```
