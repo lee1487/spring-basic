@@ -444,3 +444,12 @@ DIP 의존관계 역전 원칙
 	    - ROLE_APPLICATION 일반적으로 사용자가 정의한 빈
 		- ROLE_INFRASTRUCTURE 스프링이 내부에서 사용하는 빈
 ```
+
+## 스프링 빈 조회 - 기본
+```
+  스프링 컨테이너에서 스프링 빈을 찾는 가장 기본적인 조회 방법
+    - ac.getBean(빈 이름, 타입)
+	- ac.getBean(타입)
+	- 조회 대상 스프링 빈이 없으면 예외 발생
+	  - NoSuchBeanDefinitionException: No bean named 'xxxxxx' available
+```
