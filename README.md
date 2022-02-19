@@ -453,3 +453,9 @@ DIP 의존관계 역전 원칙
 	- 조회 대상 스프링 빈이 없으면 예외 발생
 	  - NoSuchBeanDefinitionException: No bean named 'xxxxxx' available
 ```
+
+## 스프링 빈 조회 - 동일한 타입이 둘 이상
+```
+  - 타입으로 조회시 같은 타입의 스프링 빈이 둘 이상이면 오류가 발생한다. 이때는 빈 이름을 지정하자.
+  - ac.getBeanOrTypes()을 사용하면 해당 타입의 모든 빈을 조회할 수 있다.
+```
