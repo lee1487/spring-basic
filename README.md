@@ -1144,6 +1144,28 @@ DIP 의존관계 역전 원칙
 	재정의 하는 것은 유지보수에 더 혼란만 가중할 수 있다.
 ```
 
+### 조회한 빈이 모두 필요할 때, List, Map
+```
+  - 의도적으로 정말 해당 타입의 스프링 빈이 다 필요한 경우도 있다.
+    예를 들어서 할인 서비스를 제공하는데, 클라이언트가 할인의 종류(rate,fix)를 선택
+	할 수 있다고 가정해보자. 스프링을 사용하면 소위 말하는 전략 패턴을 매우 
+	간단하게 구현할 수 있다.
+	
+  로직 분석 
+    - DiscountService는 Map으로 모든 DiscountPolicy를 주입 받는다. 이때 
+	  fixDiscountPolicy, rateDiscountPolicy가 주입된다.
+	- discount() 메서드는 discountCode로 "fixDiscountPolicy"가 
+	  넘어오면 map에서 fixDiscountPolicy 스프링 빈을 찾아서 실행한다.
+	  물론 "rateDiscountPolicy"가 넘어오면 rateDiscountPolicy
+	  스프링 빈을 찾아서 실행한다.
+  주입 분석
+    - Map<String, DiscountPolicy>: map의 키에 스프링 빈의 이름을 넣어주고,
+	  그 값으로 DiscountPolicy타입으로 조회한 모든 스프링 빈을 담아준다.
+	- List<DiscountPolicy>: DiscountPolicy 타입으로 조회한 모든 
+	  스프링 빈을 담아준다. 
+	- 만약에 해당하는 타입의 스프링 빈이 없으면 빈 컬렉션이나 Map을 주입한다.
+```
+
 
 
 
