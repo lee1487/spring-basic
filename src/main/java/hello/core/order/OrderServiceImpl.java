@@ -14,21 +14,13 @@ public class OrderServiceImpl implements OrderService{
 	private final MemberRepository memberRepository;
 	private final DiscountPolicy discountPolicy;
 	
+	
 	@Autowired
 	public OrderServiceImpl(MemberRepository memberRepository, DiscountPolicy discountPolicy) {
 		this.memberRepository = memberRepository;
 		this.discountPolicy = discountPolicy;
 	}
 	
-	
-//	@Autowired
-//	public void init(MemberRepository memberRepository, DiscountPolicy discountPolicy) {
-//		this.memberRepository = memberRepository;
-//		this.discountPolicy = discountPolicy;
-//	}
-
-
-
 	@Override
 	public Order createOrder(Long memberId, String itemName, int itemPrice) {
 		Member member = memberRepository.findById(memberId);
