@@ -1644,6 +1644,23 @@ DIP 의존관계 역전 원칙
 		이 빈은 실제 고객의 요청이 와야 생성할 수 있다.
 ```
 
+### 스코프와 Provider 
+```
+  - 첫번째 해결방안은 앞서 배운 Provider를 사용하는 것이다.
+    간단히 ObjectProvider를 사용해 보자
+    - main() 메서드로 스프링을 실행하고, 웹 브라우저에 http://localhost:8080/log-demo
+	  를 입력하자
+	  
+	- 드디어 잘 작동하는 것을 확인할 수 있다. 
+	  - ObjectProvider 덕분에 ObjectProvider.getObject()를 호출하는 시점까지 
+	    request scope 빈의 생성을 지연 할 수 있다.
+	  - ObjectProvider.getObject()를 LogDemoController, LogDemoService에서
+	    각각 한번씩 따로 호출해도 같은 HTTP 요청이면 같은 스프링 빈이 반환된다. 
+		-> 내가 직접 이걸 구분하려면 얼마나 힘들까?
+	       이정도에서 끝내도 될 것 같지만... 개발자들의 코드 몇자를 더 줄이려는 욕심은 끝이 없다.
+		
+```
+
 
 
 
