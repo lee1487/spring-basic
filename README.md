@@ -1303,6 +1303,53 @@ DIP 의존관계 역전 원칙
 	- @PostConstruct, @PreDestroy 애노테이션 지원
 ```
 
+### 인터페이스 InitializingBean, DisposableBean
+```
+  - InitializingBean은 afterPropertiesSet() 메서드로 초기화를 지원한다.
+  - DisposableBean은 destroy() 메서드로 소멸을 지원한다.
+  
+  출력 결과 
+	생성자 호출, url = null
+	NetworkClient.afterPropertiesSet
+	connect: http://hello-spring.dev
+	call: http://hello-spring.dev message = 초기화 연결 메세지
+	org.springframework.context.annotation.AnnotationConfigApplicationContext - Closing 
+	NetworkClient.destroy
+	close http://hello-spring.dev
+  
+  - 출력 결과를 보면 초기화 메서드가 주입 완료 후에 적절하게 호출 된 것을 확인할 수 있다.
+  - 그리고 스프링 컨테이너의 종료가 호출되자 소멸 메서드가 호출 된 것도 확인할 수 있다.
+  
+  초기화, 소멸 인터페이스 단점 
+    - 이 인터페이스는 스프링 전용 인터페이스다. 해당 코드가 스프링 전용 인터페이스에 의존한다.
+	- 초기화, 소멸 메서드의 이름을 변경할 수 없다.
+	- 내가 코드를 고칠 수 없는 외부 라이브러리에 적용할 수 없다.
+	
+  참고: 인터페이스를 사용하는 초기화, 종료 방법은 스프링 초창기에 나온 방법들이고, 지금은 다음의 
+      더 나은 방법들이 있어서 거의 사용하지 않는다.
+```
+
+### 빈 등록 초기화, 소멸 메서드
+```
+  - 설정 정보에 @Bean(initMethod = "init", destroyMethod = "close") 처럼 초기화,
+    소멸 메서드를 지정할 수 있다.
+	
+  설정 정보 사용 특징 
+    - 메서드 이름을 자유롭게 줄 수 있다.
+	- 스프링 빈이 스프링 코드에 의존하지 않는다.
+	- 코드가 아니라 설정 정보를 사용하기 때문에 코드를 고칠 수 없는 외부 라이브러리에도 
+	  초기화, 종료 메서드를 적용할 수 있다. 
+  
+  종료 메서드 추론 
+    - @Bean의 destroyMethod 속성에는 아주 특별한 기능이 있다. 
+	- 라이브러리 대부분 close, shutdown 이라는 이름의 종료 메서드를 사용한다.
+	- @Bean의 destroyMethod는 기본값이(inferred)(추론)으로 등록되어 있다.
+	- 이 추론 기능은 close, shutdown라는 이름의 메서드를 자동으로 호출해준다. 
+	  이름 그대로 종료 메서드를 추론해서 호출 해 준다.
+	- 따라서 직접 스프링 빈으로 등록하면 종료 메서드는 따로 적어주지 않아도 잘 동작한다.
+	- 추론 기능을 사용하기 싫으면 destroyMethod=""처럼 빈 공백을 지정하면 된다.
+```
+
 
 
 
