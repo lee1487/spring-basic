@@ -143,7 +143,7 @@ DIP 의존관계 역전 원칙
   - DIP: 주문서비스 클라이언트(OrderServiceImpl)는 DiscountPolicy 인터페이스에 의존하면서 DIP를 지킨 것 같은데?
     - 클래스 의존관계를 분석해보자. 추상(인터페이스)뿐만 아니라 구체(구현) 클래스에도 의존하고 있다.
 	  - 추상(인터페이스)의존: DiscountPolicy
-	  - 구체(구현) zmffotm: FixDiscountPolicy, RateDiscountPolicy
+	  - 구체(구현) 클래스: FixDiscountPolicy, RateDiscountPolicy
   - OCP: 변경하지 않고 확장 할 수 있다고 했는데
     - 지금 코드는 기능을 확장해서 변경하면, 클라이언트 코드에 영향을 준다. 따라서 OCP를 위반한다.
 	
